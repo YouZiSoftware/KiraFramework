@@ -1,0 +1,4 @@
+/target
+/Cargo.lock
+/crates/bitch_bot
+/crates/bitch_bot/*
