@@ -1,0 +1,14 @@
+_version: 1
+
+console.recv.group: "接收群消息(%{group} | ID: %{id}) >> %{name}(%{qq}) >> %{message}"
+console.recv.private: "接收私人消息 >> %{name}(%{qq}) >> %{message}"
+
+console.send.group: "发送群消息(%{group}) >> %{message}"
+console.send.private: "发送私人消息 >> %{message}"
+
+console.return.msg: "消息ID >> %{id}"
+
+console.delete: "撤回消息 >> %{id}"
+console.send_like: "点赞朋友(%{qq}) >> %{times} 次"
+console.set_group_card: "设置群名片(%{group}) >> %{qq} >> %{name}"
+console.set_group_name: "设置群聊名称(%{group}) >> %{name}"

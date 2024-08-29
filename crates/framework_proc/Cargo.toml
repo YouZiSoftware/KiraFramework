@@ -1,0 +1,15 @@
+[package]
+name = "kira_framework_proc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+syn = "2.0.71"
+quote = "1.0.36"
+proc-macro-crate = "3.1.0"
+to_snake_case = "0.1.1"
+proc-macro2 = "1.0.86"
+
+[lib]
+name = "kira_framework_proc"
+proc-macro = true
