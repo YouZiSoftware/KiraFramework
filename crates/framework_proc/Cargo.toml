@@ -10,7 +10,7 @@ readme = "../../README.md"
 keywords = ["OneBot", "Kira", "Bot", "Framework", "QQ"]
 
 [dependencies]
-syn = "2.0.71"
+syn = { version = "2.0.74", features = ["full"] }
 quote = "1.0.36"
 proc-macro-crate = "3.1.0"
 to_snake_case = "0.1.1"
