@@ -5,6 +5,7 @@
   <h3 align="center">Written in Rust, an implementation of OneBot 11 based on the ECS architecture</h3>
 
   <a href="https://github.com/botuniverse/onebot-11"><img src="https://img.shields.io/badge/OneBot-11-black" alt="OneBot"></a>
+  <a href="https://crates.io/crates/kira_framework"><img src="https://img.shields.io/crates/v/kira_framework" alt="crates.io"></a>
   <a href="https://github.com/YouZiSoftware/KiraFramework/actions"><img src="https://github.com/YouZiSoftware/KiraFramework/actions/workflows/rust.yml/badge.svg" alt="Build"/></a>
 
   ### English | [简体中文(中国大陆)](README_zh_CN.md) | [正體中文(台灣地區)](README_zh_TW.md) | [Русский](README_ru.md)
