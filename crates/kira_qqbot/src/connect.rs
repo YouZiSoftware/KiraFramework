@@ -1,4 +1,3 @@
-use bevy_ecs::system::Resource;
 use kira_framework::network::connect::OneBotConnect;
 use kira_framework::network::message_chain::MessageChain;
 use crate::api::action::ret::{EmptyReturn, SendMsgReturn};

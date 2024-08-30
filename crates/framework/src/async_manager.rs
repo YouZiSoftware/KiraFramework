@@ -42,7 +42,7 @@ impl KiraAsyncManagerInner {
 pub struct KiraAsyncManagerPlugin;
 
 impl Plugin for KiraAsyncManagerPlugin {
-    fn build(&self, app: &mut App) {
+    fn build(&self, _app: &mut App) {
         unsafe { ASYNC_MANAGER = Some(KiraAsyncManager::new()) };
     }
 }

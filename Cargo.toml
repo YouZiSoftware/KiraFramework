@@ -1,4 +1,6 @@
 [workspace]
-members = [ "crates/bitch_bot",
-    "crates/framework", "crates/framework_proc", "crates/kira_qqbot",
+members = [
+    "crates/framework",
+    "crates/framework_proc",
+    "crates/kira_qqbot", "crates/xxx",
 ]

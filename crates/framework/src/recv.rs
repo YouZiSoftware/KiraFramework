@@ -1,18 +1,11 @@
 use std::fmt::Debug;
-use bevy_app::{App, Plugin, PreStartup, Startup};
-use bevy_ecs::prelude::{Component, IntoSystemConfigs, Mut};
-use bevy_ecs::system::Res;
-use bevy_ecs::world::{FromWorld, World};
+use bevy_ecs::prelude::Component;
+use bevy_ecs::world::World;
 use tokio::task::JoinHandle;
-use bevy_async_ecs::{AsyncEcsPlugin, AsyncWorld};
-use crate::network::connect::{OneBotConnect, OneBotConnectTrait};
-use crate::network::connect::reverse::OneBotReverseWebSocket;
+use bevy_async_ecs::AsyncWorld;
+use crate::network::connect::{OneBotConnect};
 use crate::network::events::OneBotEventsEnumTrait;
-use log::{debug, info, LevelFilter, trace};
-use crate::startup;
-use crate::async_manager::{KiraAsyncManager, KiraAsyncManagerPlugin};
-use crate::kira_async;
-use crate::pretty_debug::KiraPrettyDebug;
+use log::{debug, info};
 
 #[derive(Component)]
 pub struct KiraRecvEventLoop {

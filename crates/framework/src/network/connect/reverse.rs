@@ -1,17 +1,14 @@
-use std::hash::Hash;
 use std::str::FromStr;
 use std::time::Duration;
-use anyhow::Error;
 use async_trait::async_trait;
 use flume::{Receiver, Sender};
 use futures_util::{SinkExt, StreamExt};
-use log::{debug, info, trace, warn};
+use log::{debug, info, warn};
 use rust_i18n::t;
-use serde::Deserialize;
 use tokio::task::JoinHandle;
 use tokio::time;
 use tokio_tungstenite::tungstenite::{ClientRequestBuilder, Message};
-use crate::network::actions::{OneBotAction, OneBotActionReturn, OneBotActionReturnError, OneBotActionReturnTrait, OneBotActionTrait};
+use crate::network::actions::{OneBotAction, OneBotActionReturn, OneBotActionTrait};
 use crate::network::connect::OneBotConnectTrait;
 use crate::network::events::{OneBotEventTrait};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
@@ -38,7 +35,7 @@ impl OneBotReverseWebSocketConnection {
         }
 
         let req = uri.into_client_request()?;
-        let (mut ws_stream, _) = tokio_tungstenite::connect_async(req).await?;
+        let (ws_stream, _) = tokio_tungstenite::connect_async(req).await?;
         let (mut write, mut read) = ws_stream.split();
 
         let recv_loop = tokio::spawn(async move {

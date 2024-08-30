@@ -2,7 +2,6 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use bevy_ecs::prelude::Resource;
 use log::info;
-use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 use tokio_tungstenite::tungstenite::Message;
 use crate::network::actions::{OneBotActionReturn, OneBotActionReturnTrait, OneBotActionTrait};

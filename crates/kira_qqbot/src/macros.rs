@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-use crate::messages::{Image, Reply};
 #[macro_export]
 macro_rules! text {
     () => {

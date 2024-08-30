@@ -1,7 +1,13 @@
 [package]
 name = "kira_qqbot"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+license = "Apache-2.0"
+description = "KiraFramework proc macro"
+repository = "https://github.com/YouZiSoftware/KiraFramework"
+homepage = "https://github.com/YouZiSoftware/KiraFramework"
+readme = "../../README.md"
+keywords = ["OneBot", "Kira", "Bot", "Framework", "QQ"]
 
 [dependencies]
 flume = { version =  "0.11.0", features = ["async"] }

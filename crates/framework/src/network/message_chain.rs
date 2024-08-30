@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde::de::DeserializeOwned;
 use serde_json::Value;
 
 pub trait MessageTrait {
@@ -44,12 +45,16 @@ impl MessageChain {
         self.0.get(0).map_or(false, |m| m.message_type == T::get_type())
     }
 
-    pub fn remove<T: MessageTrait>(&mut self, index: usize) -> Option<Message> {
+    pub fn remove<T: MessageTrait>(&mut self, index: usize) -> Option<T>
+    where
+        T: DeserializeOwned,
+    {
         let mut i = 0;
         for msg_i in 0..self.0.len() {
             if self.0[msg_i].message_type == T::get_type() {
                 if i == index {
-                    return Some(self.0.remove(msg_i));
+                    let data = self.0.remove(msg_i).data;
+                    return serde_json::from_value::<T>(data).ok();
                 } else {
                     i += 1;
                 }

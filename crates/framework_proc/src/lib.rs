@@ -5,7 +5,6 @@ use proc_macro2::Span;
 use proc_macro_crate::FoundCrate;
 use quote::{quote, ToTokens};
 use syn::{DeriveInput, Expr, Field, Ident, ItemEnum, ItemStruct, parse_macro_input, Path};
-use syn::parse::Parser;
 use to_snake_case::ToSnakeCase;
 
 fn get_path(crate_name: &str, span: Span) -> Path {

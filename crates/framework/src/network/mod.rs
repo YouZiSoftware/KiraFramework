@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use bevy_ecs::system::Resource;
 use serde::Serialize;
 pub mod connect;
 pub mod events;
