@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: hecrj/setup-rust-action@v2
       with:
-        rust-version: 1.82.0-nightly
+        rust-version: nightly
     - name: Build
       run: cargo build
