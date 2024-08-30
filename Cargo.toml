@@ -2,5 +2,5 @@
 members = [
     "crates/framework",
     "crates/framework_proc",
-    "crates/kira_qqbot", "crates/xxx",
+    "crates/kira_qqbot",
 ]
