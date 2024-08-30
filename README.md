@@ -35,6 +35,27 @@ KiraFramework is a OneBot 11 implementation developed using the Rust language, b
 #### KiraFramework is written in Rust language, so you need to use Cargo to build it.
 [Download Rust](https://www.rust-lang.org/en-US/learn/get-started)
 
+#### Add crates to your project:
+```toml
+[dependencies]
+kira_framework = "0.2.0"
+kira_framework_proc = "0.2.0"
+```
+
+### Then enjoy!
+
+## ✨Kira QQBot✨
+### Kira QQBot is a crate developed using KiraFramework.
+#### You can use it to easily create your own QQ bot.
+
+#### Add crate to your project:
+```toml
+[dependencies]
+kira_qqbot = "0.2.0"
+```
+
+## [📕Examples📕](https://github.com/YouZiSoftware/KiraFramework/tree/main/examples)
+
 ## 👉Feedback👈
 #### We need your help in reporting any bugs or vulnerabilities that you encounter, and we also welcome any suggestions you may have.
 
