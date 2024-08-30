@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        rust-version: nightly
+        rust-version: 1.82.0-nightly
     - name: Build
       run: cargo build
