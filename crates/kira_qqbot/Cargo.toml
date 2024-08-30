@@ -14,8 +14,8 @@ flume = { version =  "0.11.0", features = ["async"] }
 bevy_ecs = "0.14"
 bevy_app = "0.14"
 bevy-async-ecs = "0.5.1"
-kira_framework = { path = "../framework" }
-kira_framework_proc = { path = "../framework_proc" }
+kira_framework = { path = "../framework", version = "0.2.0" }
+kira_framework_proc = { path = "../framework_proc", version = "0.2.0" }
 serde = { version = "1.0.208", features = ["derive"] }
 serde_json = "1.0.125"
 anyhow = "1.0.86"

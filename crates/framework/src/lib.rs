@@ -8,9 +8,6 @@ pub mod pretty_debug;
 pub mod persistent;
 pub mod lib_plugin;
 
-#[cfg(feature = "derive")]
-extern crate kira_framework_proc;
-
 use std::fmt::Debug;
 use std::path::Path;
 use bevy_app::{App, AppExit, Plugins, ScheduleRunnerPlugin, Startup};

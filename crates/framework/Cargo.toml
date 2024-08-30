@@ -11,10 +11,8 @@ keywords = ["OneBot", "Kira", "Bot", "Framework", "QQ"]
 
 [features]
 default = []
-derive = ["kira_framework_proc"]
 
 [dependencies]
-kira_framework_proc = { path = "../framework_proc", version = "0.2.0", optional = true }
 tokio-tungstenite = "0.23.1"
 bevy_ecs = "0.14.0"
 bevy_app = "0.14.0"
