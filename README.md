@@ -23,11 +23,6 @@ KiraFramework is a OneBot 11 implementation developed using the Rust language, b
 ## 🎶Features🎶
 - **Modularity**: The meticulously designed modularity of KiraFramework allows developers to easily modify the code.
 
-- **Humanized version management**:
-  - Based on the modular design concept, Undefined Redstone does not specify any Minecraft version.
-  - You only need to drag the version package into the version_control folder to automatically load the specified version's mobs, items, recipes, etc.
-  - In the future, we will further support a higher degree of modularity and customization.
-
 - **ECS architecture**: The ECS architecture allows you to find a more efficient way to manage bots, while components between various plugins can be shared, reducing unnecessary hassles.
 
 - **Concise and Efficient Macros**: A multitude of concise and efficient macros can reduce the number of lines in your code, while minimizing unnecessary repetitive code, making your code writing more efficient.
