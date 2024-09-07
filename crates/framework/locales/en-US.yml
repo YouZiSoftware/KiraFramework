@@ -1,0 +1,3 @@
+_version: 1
+console.connected: "Connection successful >> Connected to OneBot"
+console.retry: "Connection failed >> Retrying in %{sec} seconds..."

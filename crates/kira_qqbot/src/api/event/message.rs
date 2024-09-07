@@ -4,35 +4,8 @@ use kira_framework::network::message_chain::MessageChain;
 use kira_framework::pretty_debug::KiraPrettyDebug;
 use kira_framework_proc::OneBotEvent;
 use kira_framework_proc::onebot_event_type;
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct AnonymousMessage {
-    pub id: i64,
-    pub name: String,
-    pub flag: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Sender {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_id: Option<i64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub nickname: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub card: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sex: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub age: Option<i32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub area: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub level: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub role: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-}
+use crate::api::anonymous::AnonymousMessage;
+use crate::api::sender::Sender;
 
 #[derive(Serialize, Deserialize, OneBotEvent, Debug, Clone)]
 #[onebot_event_type(message = "group")]
@@ -55,7 +28,7 @@ impl KiraPrettyDebug for GroupMessage {
         let name = sender.nickname.unwrap();
         let qq = sender.user_id.unwrap();
         let message = self.raw_message.clone();
-        format!("{}", t!("console.recv.group", group = group_id, id = self.message_id, name = name, qq = qq, message = message))
+        format!("{}", t!("console.event.message.group", group = group_id, id = self.message_id, name = name, qq = qq, message = message))
     }
 }
 
@@ -77,6 +50,6 @@ impl KiraPrettyDebug for PrivateMessage {
         let name = sender.nickname.unwrap();
         let qq = self.user_id;
         let message = self.raw_message.clone();
-        format!("{}", t!("console.recv.private", name = name, qq = qq, message = message))
+        format!("{}", t!("console.event.message.private", name = name, qq = qq, message = message))
     }
 }

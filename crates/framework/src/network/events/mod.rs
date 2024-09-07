@@ -49,5 +49,6 @@ pub trait OneBotEventsEnumTrait {
 
 pub trait OneBotEventTypeTrait {
     fn get_post_type() -> String;
+    fn get_sub_type() -> Option<String>;
     fn get_type_value() -> String;
 }

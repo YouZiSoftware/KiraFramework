@@ -23,18 +23,23 @@ use crate::configs::BotConfigs;
 use crate::lib_plugin::LibPlugin;
 use crate::network::connect::OneBotConnect;
 use crate::network::events::OneBotEventsEnumTrait;
+use crate::pretty_debug::KiraPrettyDebugToggle;
 use crate::recv::spawn_recv_loop;
 
 i18n!("locales");
 
 pub struct BotApp {
-    app: App
+    app: App,
+    set_locale: bool,
+    pretty_debug: bool,
 }
 
 impl BotApp {
     pub fn new() -> Self {
         BotApp {
             app: App::new(),
+            set_locale: false,
+            pretty_debug: true,
         }
     }
 
@@ -89,12 +94,26 @@ impl BotApp {
         self
     }
 
+    pub fn set_locale(&mut self, locale: &str) -> &mut Self {
+        rust_i18n::set_locale(locale);
+        self.set_locale = true;
+        self
+    }
+
+    pub fn pretty_debug(&mut self, pretty_debug: bool) -> &mut Self {
+        self.pretty_debug = pretty_debug;
+        self
+    }
+
     pub fn run<T: OneBotEventsEnumTrait + Debug + Send + Sync + 'static>(&mut self) -> AppExit {
         T::add_events(&mut self.app);
+        if !self.set_locale {
+            self.set_locale("en-US");
+        }
         self.app
+            .insert_resource(KiraPrettyDebugToggle(self.pretty_debug))
             .add_systems(Startup, |world: &mut World| {
                 KiraAsyncManager::global().insert("recv_event");
-                rust_i18n::set_locale("zh-CN");
                 let async_world = AsyncWorld::from_world(world);
                 kira_async!("recv_event" => spawn_recv_loop::<T>(async_world).await);
             })

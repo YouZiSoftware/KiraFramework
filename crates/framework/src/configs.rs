@@ -3,7 +3,7 @@ use serde::Serialize;
 
 #[derive(Resource, Debug, Clone)]
 pub struct BotConfigs {
-    pub bot_id: u32,
+    pub bot_id: i64,
 }
 
 impl BotConfigs {

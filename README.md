@@ -38,8 +38,8 @@ KiraFramework is a OneBot 11 implementation developed using the Rust language, b
 #### Add crates to your project:
 ```toml
 [dependencies]
-kira_framework = "0.2.0"
-kira_framework_proc = "0.2.0"
+kira_framework = "0.2.1"
+kira_framework_proc = "0.2.1"
 ```
 
 ### Then enjoy!
@@ -51,7 +51,7 @@ kira_framework_proc = "0.2.0"
 #### Add crate to your project:
 ```toml
 [dependencies]
-kira_qqbot = "0.2.0"
+kira_qqbot = "0.2.1"
 ```
 
 ## [📕Examples📕](https://github.com/YouZiSoftware/KiraFramework/tree/main/examples)
