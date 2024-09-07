@@ -5,6 +5,7 @@
   <h3 align="center">Written in Rust, an implementation of OneBot 11 based on the ECS architecture</h3>
 
   <a href="https://github.com/botuniverse/onebot-11"><img src="https://img.shields.io/badge/OneBot-11-black" alt="OneBot"></a>
+  <a href="https://crates.io/crates/kira_framework"><img src="https://img.shields.io/crates/v/kira_framework" alt="crates.io"></a>
   <a href="https://github.com/YouZiSoftware/KiraFramework/actions"><img src="https://github.com/YouZiSoftware/KiraFramework/actions/workflows/rust.yml/badge.svg" alt="Build"/></a>
 
   ### English | [简体中文(中国大陆)](README_zh_CN.md) | [正體中文(台灣地區)](README_zh_TW.md) | [Русский](README_ru.md)
@@ -21,11 +22,6 @@ KiraFramework is a OneBot 11 implementation developed using the Rust language, b
 > We strongly advise against using this project in a **production environment**, even if certain parts may appear to be complete, until an official release has been issued.
 ## 🎶Features🎶
 - **Modularity**: The meticulously designed modularity of KiraFramework allows developers to easily modify the code.
-
-- **Humanized version management**:
-  - Based on the modular design concept, Undefined Redstone does not specify any Minecraft version.
-  - You only need to drag the version package into the version_control folder to automatically load the specified version's mobs, items, recipes, etc.
-  - In the future, we will further support a higher degree of modularity and customization.
 
 - **ECS architecture**: The ECS architecture allows you to find a more efficient way to manage bots, while components between various plugins can be shared, reducing unnecessary hassles.
 
