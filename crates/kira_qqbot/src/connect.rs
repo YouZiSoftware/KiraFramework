@@ -1,5 +1,6 @@
 use std::time::Duration;
 use kira_framework::network::connect::OneBotConnect;
+use kira_framework::network::events::{OneBotEventReceiver, OneBotEventTrait};
 use kira_framework::network::message_chain::MessageChain;
 use crate::api::action::ret::{EmptyReturn, GetForwardMsgReturn, GetLoginInfoReturn, GetMsgReturn, SendMsgReturn};
 use crate::api::action::{DeleteMsg, GetForwardMsg, GetLoginInfo, GetMsg, SendGroupMsg, SendLike, SetFriendAddRequest, SetGroupAddRequest, SetGroupAdmin, SetGroupAnonymous, SetGroupAnonymousBan, SetGroupBan, SetGroupCard, SetGroupKick, SetGroupLeave, SetGroupName, SetGroupSpecialTitle, SetGroupWholeBan};
@@ -15,6 +16,15 @@ impl KiraQQBotConnect {
         KiraQQBotConnect {
             connect
         }
+    }
+
+    pub async fn wait_event<T: OneBotEventTrait + Send + Sync + Sized + Clone>(&self) -> anyhow::Result<T>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        let world = self.connect.world();
+        let event: OneBotEventReceiver<T> = world.wait_for_event().await;
+        Ok(event.event)
     }
 
     pub async fn send_group_message(&self, group_id: i64, message: MessageChain, auto_escape: bool) -> anyhow::Result<i32> {

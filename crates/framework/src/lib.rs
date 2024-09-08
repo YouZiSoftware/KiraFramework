@@ -9,7 +9,6 @@ pub mod persistent;
 pub mod lib_plugin;
 
 use std::fmt::Debug;
-use std::path::Path;
 use bevy_app::{App, AppExit, Plugins, ScheduleRunnerPlugin, Startup};
 use bevy_async_ecs::{AsyncEcsPlugin, AsyncWorld};
 use bevy_ecs::event::Event;
@@ -20,7 +19,6 @@ use bevy_ecs::world::FromWorld;
 use rust_i18n::i18n;
 use crate::async_manager::{KiraAsyncManager, KiraAsyncManagerPlugin};
 use crate::configs::BotConfigs;
-use crate::lib_plugin::LibPlugin;
 use crate::network::connect::OneBotConnect;
 use crate::network::events::OneBotEventsEnumTrait;
 use crate::pretty_debug::KiraPrettyDebugToggle;
@@ -36,8 +34,9 @@ pub struct BotApp {
 
 impl BotApp {
     pub fn new() -> Self {
+        let mut app = App::new();
         BotApp {
-            app: App::new(),
+            app,
             set_locale: false,
             pretty_debug: true,
         }
@@ -48,7 +47,8 @@ impl BotApp {
         self
     }
 
-    pub fn onebot_connect(&mut self, connect: OneBotConnect) -> &mut Self {
+    pub fn onebot_connect(&mut self, mut connect: OneBotConnect) -> &mut Self {
+        connect.set_world(AsyncWorld::from_world(self.app.world_mut()));
         self.app.insert_resource(connect);
         self
     }
@@ -56,20 +56,6 @@ impl BotApp {
     pub fn add_plugins<T>(&mut self, plugin: impl Plugins<T>) -> &mut Self {
         self.app.add_plugins(plugin);
         self
-    }
-
-    pub fn add_lib_plugins<P: AsRef<Path>>(&mut self, path: P) -> anyhow::Result<&mut Self> {
-        let path = path.as_ref();
-        if path.is_file() {
-            self.app.add_plugins(LibPlugin::new(path)?);
-        }else if path.is_dir() {
-            for entry in path.read_dir().unwrap() {
-                if let Ok(entry) = entry {
-                    self.app.add_plugins(LibPlugin::new(entry.path())?);
-                }
-            }
-        }
-        Ok(self)
     }
 
     pub fn insert_resource(&mut self, resource: impl Resource) -> &mut Self {

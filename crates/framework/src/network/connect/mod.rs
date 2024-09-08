@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use async_trait::async_trait;
+use bevy_async_ecs::AsyncWorld;
 use bevy_ecs::prelude::Resource;
 use log::info;
 use tokio::sync::RwLock;
@@ -22,13 +23,23 @@ pub trait OneBotConnectTrait {
 #[derive(Resource, Clone)]
 pub struct OneBotConnect {
     connect: Arc<RwLock<Box<dyn OneBotConnectTrait + Sync + Send>>>,
+    world: Option<AsyncWorld>,
 }
 
 impl OneBotConnect {
     pub fn new<T: OneBotConnectTrait + Sync + Send + 'static>(connect: T) -> Self {
         Self {
-            connect: Arc::new(RwLock::new(Box::new(connect)))
+            connect: Arc::new(RwLock::new(Box::new(connect))),
+            world: None,
         }
+    }
+
+    pub fn set_world(&mut self, world: AsyncWorld) {
+        self.world = Some(world);
+    }
+
+    pub fn world(&self) -> AsyncWorld {
+        self.world.clone().unwrap()
     }
 
     pub async fn connect(&self) -> anyhow::Result<()> {

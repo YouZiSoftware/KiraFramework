@@ -27,7 +27,10 @@ pub(crate) async fn spawn_recv_loop<T: OneBotEventsEnumTrait + Debug + Send + Sy
                 let result = T::from_json(message.clone());
                 if let Ok(event) = result {
                     if debug_enabled {
-                        info!("{}", event.pretty_debug());
+                        let pretty_debug = event.pretty_debug();
+                        if !pretty_debug.is_empty() {
+                            info!("{}", pretty_debug);
+                        }
                     }
                     debug!("recv event >> {:?}", event);
                     world.apply(|world: &mut World| {

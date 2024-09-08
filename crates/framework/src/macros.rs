@@ -25,6 +25,15 @@ macro_rules! kira_recv {
 }
 
 #[macro_export]
+macro_rules! kira_timeout {
+    ($timeout: expr => $block: block) => {
+        tokio::time::timeout($timeout, async move {
+            $block
+        }).await
+    }
+}
+
+#[macro_export]
 macro_rules! messages {
     ($($message: expr),+) => {{
         let mut message_chain = MessageChain::new();

@@ -4,12 +4,12 @@ use bevy_ecs::world::World;
 use serde::Serialize;
 use serde_json::Value;
 
-#[derive(Event, Debug)]
-pub struct OneBotEventReceiver<T: OneBotEventTrait + Send + Sync + Sized> {
+#[derive(Event, Debug, Clone)]
+pub struct OneBotEventReceiver<T: OneBotEventTrait + Send + Sync + Sized + Clone> {
     pub event: T,
 }
 
-impl<T: OneBotEventTrait + Send + Sync + Sized> OneBotEventReceiver<T> {
+impl<T: OneBotEventTrait + Send + Sync + Sized + Clone> OneBotEventReceiver<T> {
     pub fn new(event: T) -> Self {
         Self { event }
     }
@@ -36,7 +36,7 @@ impl OneBotEvent {
 
 pub trait OneBotEventTrait where Self: 'static {
     fn send_event(self, world: &mut World) -> anyhow::Result<EventId<OneBotEventReceiver<Self>>>
-    where Self: Send + Sync + Sized;
+    where Self: Send + Sync + Sized + Clone;
     fn to_json(&self) -> anyhow::Result<Value>;
 }
 
@@ -49,6 +49,6 @@ pub trait OneBotEventsEnumTrait {
 
 pub trait OneBotEventTypeTrait {
     fn get_post_type() -> String;
-    fn get_sub_type() -> Option<String>;
+    fn get_sub_type() -> String;
     fn get_type_value() -> String;
 }

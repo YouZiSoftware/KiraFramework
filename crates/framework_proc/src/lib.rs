@@ -32,7 +32,7 @@ pub fn onebot_event_derive(input: TokenStream) -> TokenStream {
         impl #path::network::events::OneBotEventTrait for #name {
             fn send_event(self, world: &mut #bevy_path::world::World) -> anyhow::Result<#bevy_path::event::EventId<#path::network::events::OneBotEventReceiver<Self>>>
             where
-                Self: std::marker::Send + std::marker::Sync + Sized {
+                Self: std::marker::Send + std::marker::Sync + Sized + Clone {
                 world.send_event(
                     #path::network::events::OneBotEventReceiver::new(self)
                 ).ok_or(anyhow::anyhow!("send event({}) error", stringify!(#name)))
@@ -65,9 +65,9 @@ pub fn onebot_events_enum_derive(input: TokenStream) -> TokenStream {
                 let post_type = value.get("post_type").ok_or(anyhow::anyhow!("post_type not found"))?
                     .as_str().ok_or(anyhow::anyhow!("post_type not str"))?;
                 let sub_type = if let Some(sub_type) = value.get("sub_type") {
-                    sub_type.as_str().map(|s| s.to_string())
+                    sub_type.as_str().unwrap_or("normal").to_string()
                 }else {
-                    None
+                    "normal".to_string()
                 };
                 let type_value = value.get(format!("{}_type", post_type)).ok_or(anyhow::anyhow!("{}_type not found", post_type))?
                     .as_str().ok_or(anyhow::anyhow!("{}_type not str", post_type))?;
@@ -77,6 +77,7 @@ pub fn onebot_events_enum_derive(input: TokenStream) -> TokenStream {
                 #(
                 struct_name_map.insert((<#vars as #path::network::events::OneBotEventTypeTrait>::get_post_type(), <#vars as #path::network::events::OneBotEventTypeTrait>::get_sub_type(), <#vars as #path::network::events::OneBotEventTypeTrait>::get_type_value()), stringify!(#vars));
                 )*
+                debug!("find struct: ({}, {:?}, {})", &post_type, &sub_type, &type_value);
                 let struct_name = struct_name_map.get(&(post_type, sub_type, type_value)).ok_or(anyhow::anyhow!("struct_name not found"))?.clone();
                 match struct_name {
                     #(
@@ -314,42 +315,27 @@ pub fn onebot_event_type(attr: TokenStream, item: TokenStream) -> TokenStream {
     let name = item.ident.clone();
     let post_type = expr.left.to_token_stream().to_string();
     let type_value = expr.right.to_token_stream().to_string().replace("\"", "");
+    let mut type_value = type_value.as_str();
     let path = get_path("kira_framework", name.span());
-    let expanded = if type_value.contains(".") {
+    let mut sub_type = "normal";
+    if type_value.contains(".") {
         let vec = type_value.split(".").collect::<Vec<&str>>();
-        let type_value = vec[0];
-        let sub_type = vec[1];
-        quote! {
-            #item
-            impl #path::network::events::OneBotEventTypeTrait for #name {
-                fn get_post_type() -> String {
-                    #post_type.to_string()
-                }
-
-                fn get_sub_type() -> Option<String> {
-                    Some(#sub_type.to_string())
-                }
-
-                fn get_type_value() -> String {
-                    #type_value.to_string()
-                }
+        type_value = vec[0];
+        sub_type = vec[1];
+    }
+    let expanded = quote! {
+        #item
+        impl #path::network::events::OneBotEventTypeTrait for #name {
+            fn get_post_type() -> String {
+                #post_type.to_string()
             }
-        }
-    }else {
-        quote! {
-            #item
-            impl #path::network::events::OneBotEventTypeTrait for #name {
-                fn get_post_type() -> String {
-                    #post_type.to_string()
-                }
 
-                fn get_sub_type() -> Option<String> {
-                    None
-                }
+            fn get_sub_type() -> String {
+                #sub_type.to_string()
+            }
 
-                fn get_type_value() -> String {
-                    #type_value.to_string()
-                }
+            fn get_type_value() -> String {
+                #type_value.to_string()
             }
         }
     };

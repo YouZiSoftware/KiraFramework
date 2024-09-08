@@ -4,7 +4,9 @@ use kira_framework_proc::{onebot_event_type, OneBotEvent};
 
 #[derive(Serialize, Deserialize, OneBotEvent, Debug, Clone)]
 #[onebot_event_type(meta_event = "lifecycle.enable")]
-pub struct LifecycleEnable;
+pub struct LifecycleEnable {
+    pub time: i64,
+}
 
 impl KiraPrettyDebug for LifecycleEnable {
     fn pretty_debug(&self) -> String {
@@ -14,7 +16,9 @@ impl KiraPrettyDebug for LifecycleEnable {
 
 #[derive(Serialize, Deserialize, OneBotEvent, Debug, Clone)]
 #[onebot_event_type(meta_event = "lifecycle.disable")]
-pub struct LifecycleDisable;
+pub struct LifecycleDisable {
+    pub time: i64,
+}
 
 impl KiraPrettyDebug for LifecycleDisable {
     fn pretty_debug(&self) -> String {
@@ -24,7 +28,9 @@ impl KiraPrettyDebug for LifecycleDisable {
 
 #[derive(Serialize, Deserialize, OneBotEvent, Debug, Clone)]
 #[onebot_event_type(meta_event = "lifecycle.connect")]
-pub struct LifecycleConnect;
+pub struct LifecycleConnect {
+    pub time: i64,
+}
 
 impl KiraPrettyDebug for LifecycleConnect {
     fn pretty_debug(&self) -> String {

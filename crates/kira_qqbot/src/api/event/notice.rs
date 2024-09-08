@@ -74,15 +74,15 @@ impl KiraPrettyDebug for GroupDecreaseKick {
 }
 
 #[derive(Serialize, Deserialize, OneBotEvent, Debug, Clone)]
-#[onebot_event_type(notice = "group_decrease.leave.kick_me")]
-pub struct GroupDecreaseLeaveKickMe {
+#[onebot_event_type(notice = "group_decrease.kick_me")]
+pub struct GroupDecreaseKickMe {
     pub group_id: i64,
     pub operator_id: i64,
 }
 
-impl KiraPrettyDebug for GroupDecreaseLeaveKickMe {
+impl KiraPrettyDebug for GroupDecreaseKickMe {
     fn pretty_debug(&self) -> String {
-        format!("{}", t!("console.event.notice.group_decrease.leave.kick_me", group = self.group_id, op_qq = self.operator_id))
+        format!("{}", t!("console.event.notice.group_decrease.kick_me", group = self.group_id, op_qq = self.operator_id))
     }
 }
 
@@ -193,7 +193,7 @@ pub struct NotifyPoke {
 
 impl KiraPrettyDebug for NotifyPoke {
     fn pretty_debug(&self) -> String {
-        format!("{}", t!("console.event.notice.notify.poke", group = self.group_id, qq = self.user_id, op_qq = self.target_id))
+        format!("{}", t!("console.event.notice.notify.poke", group = self.group_id, qq = self.target_id, op_qq = self.user_id))
     }
 }
 
