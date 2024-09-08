@@ -34,9 +34,8 @@ pub struct BotApp {
 
 impl BotApp {
     pub fn new() -> Self {
-        let mut app = App::new();
         BotApp {
-            app,
+            app: App::new(),
             set_locale: false,
             pretty_debug: true,
         }
