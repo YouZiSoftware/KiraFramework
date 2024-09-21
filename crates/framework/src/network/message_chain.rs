@@ -45,6 +45,23 @@ impl MessageChain {
         self.0.get(0).map_or(false, |m| m.message_type == T::get_type())
     }
 
+    pub fn get<T: MessageTrait>(&self, index: usize) -> Option<T>
+    where
+        T: DeserializeOwned,
+    {
+        let mut i = 0;
+        for msg in self.0.iter() {
+            if msg.message_type == T::get_type() {
+                if i == index {
+                    return serde_json::from_value::<T>(msg.data.clone()).ok();
+                } else {
+                    i += 1;
+                }
+            }
+        }
+        None
+    }
+
     pub fn remove<T: MessageTrait>(&mut self, index: usize) -> Option<T>
     where
         T: DeserializeOwned,

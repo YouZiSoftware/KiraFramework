@@ -1,10 +1,10 @@
 #[macro_export]
 macro_rules! text {
     () => {
-        Text::new("")
+        $crate::messages::Text::new("")
     };
     ($($arg:tt)*) => {{
-        Text {
+        $crate::messages::Text {
             text: format!($($arg)*)
         }
     }};
@@ -17,7 +17,7 @@ macro_rules! at {
             $qq
         };
         let str = str.to_string();
-        At::from_str(str)
+        $crate::messages::At::from_str(str)
     }};
 }
 
@@ -28,7 +28,7 @@ macro_rules! reply {
             $id
         };
         let str = str.to_string();
-        Reply {
+        $crate::messages::Reply {
             id: str
         }
     }};
@@ -38,6 +38,32 @@ macro_rules! reply {
 macro_rules! image {
     (file($path: expr)) => {{
         let path = PathBuf::from($path);
-        Image::file(path)
+        $crate::messages::Image::file(path)
+    }};
+}
+
+#[macro_export]
+macro_rules! xml {
+    ($id:expr) => {{
+        let str = {
+            $id
+        };
+        let data = str.to_string();
+        $crate::messages::Xml {
+            data
+        }
+    }};
+}
+
+#[macro_export]
+macro_rules! json {
+    ($id:expr) => {{
+        let str = {
+            $id
+        };
+        let data = str.to_string();
+        $crate::messages::Json {
+            data
+        }
     }};
 }

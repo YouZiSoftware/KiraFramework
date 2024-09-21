@@ -9,6 +9,8 @@ pub enum Messages {
     At,
     Reply,
     Image,
+    Xml,
+    Json,
 }
 
 #[derive(Serialize, Deserialize, OneBotMessage)]
@@ -78,4 +80,14 @@ impl AsPersistentStringTrait for Image {
     fn as_persistent_string(&self) -> String {
         format!("[CQ:image,file={}]", self.file.as_ref().unwrap())
     }
+}
+
+#[derive(Serialize, Deserialize, OneBotMessage, AsPersistentString)]
+pub struct Xml {
+    pub data: String
+}
+
+#[derive(Serialize, Deserialize, OneBotMessage, AsPersistentString)]
+pub struct Json {
+    pub data: String
 }

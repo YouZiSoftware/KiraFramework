@@ -1,6 +1,6 @@
 [package]
 name = "kira_framework"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 license = "Apache-2.0"
 description = "An implementation of OneBot 11 based on the ECS architecture."
