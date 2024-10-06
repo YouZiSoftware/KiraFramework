@@ -24,6 +24,15 @@ pub struct Message {
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct MessageChain(Vec<Message>);
 
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(untagged)]
+pub enum MessageChainType {
+    #[default]
+    None,
+    Str(String),
+    Chain(MessageChain),
+}
+
 impl MessageChain {
     pub fn new() -> Self {
         Self(Vec::new())

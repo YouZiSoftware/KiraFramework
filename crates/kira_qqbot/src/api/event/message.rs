@@ -1,6 +1,6 @@
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
-use kira_framework::network::message_chain::MessageChain;
+use kira_framework::network::message_chain::MessageChainType;
 use kira_framework::pretty_debug::KiraPrettyDebug;
 use kira_framework_proc::OneBotEvent;
 use kira_framework_proc::onebot_event_type;
@@ -15,7 +15,7 @@ pub struct GroupMessage {
     pub group_id: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub anonymous: Option<AnonymousMessage>,
-    pub message: MessageChain,
+    pub message: MessageChainType,
     pub raw_message: String,
     pub font: i32,
     pub sender: Sender,
@@ -38,7 +38,7 @@ pub struct PrivateMessage {
     pub sub_type: String,
     pub message_id: i32,
     pub user_id: i64,
-    pub message: MessageChain,
+    pub message: MessageChainType,
     pub raw_message: String,
     pub font: i32,
     pub sender: Sender,

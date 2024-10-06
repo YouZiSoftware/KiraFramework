@@ -1,8 +1,24 @@
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
+use kira_framework::messages;
+use kira_framework::network::message_chain::{MessageChain, MessageChainType};
 use kira_framework::persistent::AsPersistentStringTrait;
 use kira_framework_proc::{AsPersistentString, OneBotMessage, OneBotMessagesEnum};
+use crate::text;
 
+pub trait MessageChainTrait {
+    fn as_message_chain(&self) -> MessageChain;
+}
+
+impl MessageChainTrait for MessageChainType {
+    fn as_message_chain(&self) -> MessageChain {
+        match self {
+            MessageChainType::None => MessageChain::new(),
+            MessageChainType::Str(s) => messages!(text!(s)),
+            MessageChainType::Chain(c) => c.clone(),
+        }
+    }
+}
 #[derive(OneBotMessagesEnum)]
 pub enum Messages {
     Text,
