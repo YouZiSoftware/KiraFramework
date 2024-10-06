@@ -14,7 +14,7 @@ impl MessageChainTrait for MessageChainType {
     fn as_message_chain(&self) -> MessageChain {
         match self {
             MessageChainType::None => MessageChain::new(),
-            MessageChainType::Str(s) => messages!(text!(s)),
+            MessageChainType::Str(s) => messages!(text!("{}", s)),
             MessageChainType::Chain(c) => c.clone(),
         }
     }
