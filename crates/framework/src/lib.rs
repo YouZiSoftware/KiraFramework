@@ -2,22 +2,20 @@ pub mod configs;
 pub mod network;
 pub mod utils;
 pub mod recv;
-pub mod async_manager;
 pub mod macros;
 pub mod pretty_debug;
 pub mod persistent;
 pub mod lib_plugin;
 
 use std::fmt::Debug;
-use bevy_app::{App, AppExit, Plugins, ScheduleRunnerPlugin, Startup};
-use bevy_async_ecs::{AsyncEcsPlugin, AsyncWorld};
-use bevy_ecs::event::Event;
-use bevy_ecs::prelude::{IntoSystemConfigs, World};
-use bevy_ecs::schedule::ScheduleLabel;
-use bevy_ecs::system::Resource;
-use bevy_ecs::world::FromWorld;
 use rust_i18n::i18n;
-use crate::async_manager::{KiraAsyncManager, KiraAsyncManagerPlugin};
+use ur_ecs::app::{App, AppExit};
+use ur_ecs::app::plugin::Plugins;
+use ur_ecs::app::schedule_runner::ScheduleRunnerPlugin;
+use ur_ecs::event::Event;
+use ur_ecs::resource::Resource;
+use ur_ecs::schedule::{ScheduleLabel, Startup};
+use ur_ecs::system::IntoSystem;
 use crate::configs::BotConfigs;
 use crate::network::connect::OneBotConnect;
 use crate::network::events::OneBotEventsEnumTrait;
@@ -47,34 +45,31 @@ impl BotApp {
     }
 
     pub fn onebot_connect(&mut self, mut connect: OneBotConnect) -> &mut Self {
-        connect.set_world(AsyncWorld::from_world(self.app.world_mut()));
+        connect.set_world(self.app.world().clone());
         self.app.insert_resource(connect);
         self
     }
 
-    pub fn add_plugins<T>(&mut self, plugin: impl Plugins<T>) -> &mut Self {
-        self.app.add_plugins(plugin);
+    pub fn add_plugins<M>(&mut self, plugins: impl Plugins<M>) -> &mut Self {
+        self.app.add_plugins(plugins);
         self
     }
 
-    pub fn insert_resource(&mut self, resource: impl Resource) -> &mut Self {
+    pub fn insert_resource<R: Resource + 'static + Send + Sync>(&mut self, resource: R) -> &mut Self {
         self.app.insert_resource(resource);
         self
     }
 
-    pub fn add_event<T>(&mut self) -> &mut Self
-    where
-        T: Event,
-    {
+    pub fn add_event<T: Event + 'static + Send + Sync>(&mut self) -> &mut Self {
         self.app.add_event::<T>();
         self
     }
 
-    pub fn add_systems<M>(
-        &mut self,
-        schedule: impl ScheduleLabel,
-        systems: impl IntoSystemConfigs<M>,
-    ) -> &mut Self {
+    pub fn add_systems<S, Marker>(&mut self, schedule: impl ScheduleLabel, systems: S) -> &mut Self
+    where
+        S: IntoSystem<S, Marker> + 'static,
+        Marker: 'static,
+    {
         self.app.add_systems(schedule, systems);
         self
     }
@@ -97,14 +92,8 @@ impl BotApp {
         }
         self.app
             .insert_resource(KiraPrettyDebugToggle(self.pretty_debug))
-            .add_systems(Startup, |world: &mut World| {
-                KiraAsyncManager::global().insert("recv_event");
-                let async_world = AsyncWorld::from_world(world);
-                kira_async!("recv_event" => spawn_recv_loop::<T>(async_world).await);
-            })
+            .add_systems(Startup, spawn_recv_loop::<T>)
             .add_plugins(ScheduleRunnerPlugin::default())
-            .add_plugins(AsyncEcsPlugin)
-            .add_plugins(KiraAsyncManagerPlugin)
             .run()
     }
 }

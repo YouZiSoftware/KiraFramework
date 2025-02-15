@@ -319,3 +319,14 @@ impl KiraPrettyDebug for GetLoginInfo {
         "".to_string()
     }
 }
+
+#[derive(Serialize, OneBotAction)]
+pub struct GetImage {
+    pub file: String,
+}
+
+impl KiraPrettyDebug for GetImage {
+    fn pretty_debug(&self) -> String {
+        "".to_string()
+    }
+}

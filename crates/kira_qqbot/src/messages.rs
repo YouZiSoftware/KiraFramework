@@ -82,12 +82,22 @@ pub struct Reply {
 pub struct Image {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
 }
 
 impl Image {
     pub fn file(file: PathBuf) -> Self {
         Self {
             file: Some(format!("file:///{}", file.to_str().unwrap())),
+            url: None,
+        }
+    }
+
+    pub fn url(url: &str) -> Self {
+        Self {
+            file: None,
+            url: Some(url.to_string()),
         }
     }
 }
@@ -106,4 +116,30 @@ pub struct Xml {
 #[derive(Serialize, Deserialize, OneBotMessage, AsPersistentString)]
 pub struct Json {
     pub data: String
+}
+
+#[derive(Serialize, Deserialize, OneBotMessage)]
+pub struct Record {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub file: Option<String>,
+}
+
+impl Record {
+    pub fn file(file: PathBuf) -> Self {
+        Self {
+            file: Some(format!("file:///{}", file.to_str().unwrap())),
+        }
+    }
+
+    pub fn base64(base64: String) -> Self {
+        Self {
+            file: Some(format!("base64://{}", base64)),
+        }
+    }
+}
+
+impl AsPersistentStringTrait for Record {
+    fn as_persistent_string(&self) -> String {
+        format!("[CQ:record,file={}]", self.file.as_ref().unwrap())
+    }
 }

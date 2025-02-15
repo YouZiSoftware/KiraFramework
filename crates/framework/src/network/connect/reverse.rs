@@ -13,6 +13,7 @@ use crate::network::connect::OneBotConnectTrait;
 use crate::network::events::{OneBotEventTrait};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::tungstenite::http::Uri;
+use uuid::Uuid;
 
 pub struct OneBotReverseWebSocketConnection {
     pub url: String,
@@ -68,6 +69,7 @@ impl OneBotReverseWebSocketConnection {
         let json = serde_json::to_string(&OneBotAction {
             action: action.get_action(),
             params: action.get_data(),
+            echo: Uuid::new_v4().to_string(),
         })?;
         debug!("send action >> {}", &json);
         let pretty_debug = action.pretty_debug();

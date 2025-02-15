@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
 use serde_json::Value;
+pub use kira_framework_proc::{ OneBotMessage, OneBotMessagesEnum };
 
 pub trait MessageTrait {
     fn get_type() -> String;
@@ -69,6 +70,21 @@ impl MessageChain {
             }
         }
         None
+    }
+
+    pub fn get_vec<T: MessageTrait>(&self) -> Vec<T>
+    where
+        T: DeserializeOwned,
+    {
+        let mut result = Vec::new();
+        for msg in self.0.iter() {
+            if msg.message_type == T::get_type() {
+                if let Ok(t) = serde_json::from_value::<T>(msg.data.clone()) {
+                    result.push(t);
+                }
+            }
+        }
+        result
     }
 
     pub fn remove<T: MessageTrait>(&mut self, index: usize) -> Option<T>

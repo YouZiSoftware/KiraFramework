@@ -14,8 +14,8 @@ default = []
 
 [dependencies]
 tokio-tungstenite = "0.23.1"
-bevy_ecs = "0.14.0"
-bevy_app = "0.14.0"
+ur_ecs = { path = "../../../undefined_redstone/crates/ur_ecs" }
+kira_framework_proc = { path = "../framework_proc" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde-inline-default = "0.2.0"
@@ -30,5 +30,5 @@ futures-util = "0.3.30"
 futures-channel = "0.3.30"
 url = "2.5.2"
 rust-i18n = "3"
-bevy-async-ecs = "0.6"
 libloading = "0.8.4"
+atomic_mut = "*"

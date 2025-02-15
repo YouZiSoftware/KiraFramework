@@ -1,5 +1,5 @@
-use bevy_ecs::system::Resource;
 use serde::Serialize;
+use ur_ecs::resource::Resource;
 
 #[derive(Resource, Debug, Clone)]
 pub struct BotConfigs {

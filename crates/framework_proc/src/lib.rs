@@ -9,7 +9,6 @@ use to_snake_case::ToSnakeCase;
 
 fn get_path(crate_name: &str, span: Span) -> Path {
     let found_crate = proc_macro_crate::crate_name(crate_name).unwrap();
-
     match found_crate {
         FoundCrate::Itself => {
             Path::from(Ident::new("crate", span))
@@ -26,11 +25,12 @@ pub fn onebot_event_derive(input: TokenStream) -> TokenStream {
     let name = input.ident;
 
     let path = get_path("kira_framework", name.span());
-    let bevy_path = get_path("bevy_ecs", name.span());
+    let ecs_path = get_path("ur_ecs", name.span());
 
     let expanded = quote! {
+        #[#path::network::events::async_trait]
         impl #path::network::events::OneBotEventTrait for #name {
-            fn send_event(self, world: &mut #bevy_path::world::World) -> anyhow::Result<#bevy_path::event::EventId<#path::network::events::OneBotEventReceiver<Self>>>
+            async fn send_event(self, world: &#ecs_path::world::World) -> anyhow::Result<#ecs_path::event::EventId>
             where
                 Self: std::marker::Send + std::marker::Sync + Sized + Clone {
                 world.send_event(
@@ -53,12 +53,12 @@ pub fn onebot_events_enum_derive(input: TokenStream) -> TokenStream {
     let name = input.ident;
 
     let path = get_path("kira_framework", name.span());
-    let bevy_path = get_path("bevy_ecs", name.span());
-    let app_path = get_path("bevy_app", name.span());
+    let ecs_path = get_path("ur_ecs", name.span());
     let vars: Vec<Ident> = input.variants.iter().map(|vars| {
         vars.ident.clone()
     }).collect();
     let expanded = quote! {
+        #[#path::network::events::async_trait]
         impl #path::network::events::OneBotEventsEnumTrait for #name {
             fn from_json(json: String) -> anyhow::Result<Self> where Self: Sized {
                 let value: serde_json::Value = serde_json::from_str(json.as_str())?;
@@ -91,7 +91,7 @@ pub fn onebot_events_enum_derive(input: TokenStream) -> TokenStream {
                     }
                 }
             }
-            fn send_event(self, world: &mut #bevy_path::world::World) -> anyhow::Result<()> {
+            async fn send_event(self, world: &#ecs_path::world::World) -> anyhow::Result<()> {
                 match self {
                     #(
                         #name::#vars(event) => {
@@ -104,7 +104,7 @@ pub fn onebot_events_enum_derive(input: TokenStream) -> TokenStream {
                     }
                 }
             }
-            fn add_events(app: &mut #app_path::App) {
+            fn add_events(app: &#ecs_path::app::App) {
                 #(
                 app.add_event::<#path::network::events::OneBotEventReceiver<#vars>>();
                 )*

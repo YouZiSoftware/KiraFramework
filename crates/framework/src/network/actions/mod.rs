@@ -2,11 +2,13 @@ use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+pub use kira_framework_proc::{ OneBotAction, OneBotActionReturn };
 
 #[derive(Serialize)]
 pub struct OneBotAction {
     pub action: String,
     pub params: Value,
+    pub echo: String,
 }
 
 pub trait OneBotActionTrait {

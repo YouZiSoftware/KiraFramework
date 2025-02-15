@@ -1,8 +1,10 @@
-use bevy_app::App;
-use bevy_ecs::event::{Event, EventId};
-use bevy_ecs::world::World;
+pub use async_trait::async_trait;
 use serde::Serialize;
 use serde_json::Value;
+use ur_ecs::app::App;
+use ur_ecs::event::{Event, EventId};
+use ur_ecs::world::World;
+pub use kira_framework_proc::{ OneBotEvent, OneBotEventsEnum };
 
 #[derive(Event, Debug, Clone)]
 pub struct OneBotEventReceiver<T: OneBotEventTrait + Send + Sync + Sized + Clone> {
@@ -34,16 +36,18 @@ impl OneBotEvent {
     }
 }
 
+#[async_trait]
 pub trait OneBotEventTrait where Self: 'static {
-    fn send_event(self, world: &mut World) -> anyhow::Result<EventId<OneBotEventReceiver<Self>>>
+    async fn send_event(self, world: &World) -> anyhow::Result<EventId>
     where Self: Send + Sync + Sized + Clone;
     fn to_json(&self) -> anyhow::Result<Value>;
 }
 
+#[async_trait]
 pub trait OneBotEventsEnumTrait {
-    fn send_event(self, world: &mut World) -> anyhow::Result<()>;
+    async fn send_event(self, world: &World) -> anyhow::Result<()>;
     fn from_json(json: String) -> anyhow::Result<Self> where Self: Sized;
-    fn add_events(app: &mut App);
+    fn add_events(app: &App);
     fn pretty_debug(&self) -> String;
 }
 

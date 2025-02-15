@@ -68,3 +68,14 @@ impl KiraPrettyDebug for GetLoginInfoReturn {
         "".to_string()
     }
 }
+
+#[derive(Deserialize, OneBotActionReturn)]
+pub struct GetImageReturn {
+    pub file: String,
+}
+
+impl KiraPrettyDebug for GetImageReturn {
+    fn pretty_debug(&self) -> String {
+        "".to_string()
+    }
+}

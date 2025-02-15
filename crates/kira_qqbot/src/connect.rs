@@ -1,10 +1,12 @@
+use std::path::PathBuf;
 use std::time::Duration;
+use base64::Engine;
 use kira_framework::network::connect::OneBotConnect;
-use kira_framework::network::events::{OneBotEventReceiver, OneBotEventTrait};
 use kira_framework::network::message_chain::MessageChain;
-use crate::api::action::ret::{EmptyReturn, GetForwardMsgReturn, GetLoginInfoReturn, GetMsgReturn, SendMsgReturn};
-use crate::api::action::{DeleteMsg, GetForwardMsg, GetLoginInfo, GetMsg, SendGroupMsg, SendLike, SetFriendAddRequest, SetGroupAddRequest, SetGroupAdmin, SetGroupAnonymous, SetGroupAnonymousBan, SetGroupBan, SetGroupCard, SetGroupKick, SetGroupLeave, SetGroupName, SetGroupSpecialTitle, SetGroupWholeBan};
+use crate::api::action::ret::{EmptyReturn, GetForwardMsgReturn, GetImageReturn, GetLoginInfoReturn, GetMsgReturn, SendMsgReturn};
+use crate::api::action::{DeleteMsg, GetForwardMsg, GetImage, GetLoginInfo, GetMsg, SendGroupMsg, SendLike, SetFriendAddRequest, SetGroupAddRequest, SetGroupAdmin, SetGroupAnonymous, SetGroupAnonymousBan, SetGroupBan, SetGroupCard, SetGroupKick, SetGroupLeave, SetGroupName, SetGroupSpecialTitle, SetGroupWholeBan};
 use crate::api::anonymous::AnonymousMessage;
+use crate::messages::Image;
 
 #[derive(Clone)]
 pub struct KiraQQBotConnect {
@@ -18,14 +20,19 @@ impl KiraQQBotConnect {
         }
     }
 
+    /*
     pub async fn wait_event<T: OneBotEventTrait + Send + Sync + Sized + Clone>(&self) -> anyhow::Result<T>
     where
         T: serde::de::DeserializeOwned,
     {
         let world = self.connect.world();
-        let event: OneBotEventReceiver<T> = world.wait_for_event().await;
-        Ok(event.event)
+        let mut events = world.get_resource_mut::<Events<E>>()?;
+        events.wait_for_event().await;
+        let event: &OneBotEventReceiver<T> = world.wait_for_event().await.ok_or(anyhow::anyhow!("wait event error"))?.0;
+        Ok(event.clone().event)
     }
+
+     */
 
     pub async fn send_group_message(&self, group_id: i64, message: MessageChain, auto_escape: bool) -> anyhow::Result<i32> {
         self.connect.send_action(SendGroupMsg {
@@ -37,11 +44,13 @@ impl KiraQQBotConnect {
         message_id.ok_or(anyhow::anyhow!("message_id is None"))
     }
 
-    pub async fn recall_message(&self, message_id: i32) -> anyhow::Result<()> {
+    pub async fn recall_message(&self, message_id: i32, need_recv: bool) -> anyhow::Result<()> {
         self.connect.send_action(DeleteMsg {
             message_id
         }).await?;
-        let _ = self.connect.recv_return::<EmptyReturn>().await;
+        if need_recv {
+            let _ = self.connect.recv_return::<EmptyReturn>().await;
+        }
         Ok(())
     }
 
@@ -200,5 +209,19 @@ impl KiraQQBotConnect {
     pub async fn get_login_info(&self) -> anyhow::Result<GetLoginInfoReturn> {
         self.connect.send_action(GetLoginInfo {}).await?;
         self.connect.recv_return::<GetLoginInfoReturn>().await
+    }
+
+    pub async fn get_image(&self, image: Image) -> anyhow::Result<PathBuf> {
+        self.connect.send_action(GetImage {
+            file: image.file.ok_or(anyhow::anyhow!("file is None"))?,
+        }).await?;
+        let file_path = self.connect.recv_return::<GetImageReturn>().await?;
+        Ok(PathBuf::from(file_path.file))
+    }
+
+    pub async fn get_image_base64(&self, image: Image) -> anyhow::Result<String> {
+        let file_path = self.get_image(image).await?;
+        let base64 = std::fs::read(file_path)?;
+        Ok(base64::prelude::BASE64_STANDARD.encode(base64.as_slice()))
     }
 }
